@@ -1,7 +1,7 @@
 #ifndef DEFINITIONS_H
 #define DEFINITIONS_H
 
-/* Block identifiers: */
+/* Block identifiers: *////
 
 #define C1 0x051
 #define C2 0x052
@@ -37,7 +37,7 @@
 #define OCCUPIED 0x01
 
 #define D_Balise_endof_Block 0x23A   //distance from all balises to the end of their blocks are about 570 mm (0x23A)
-#define velocity 44               //Default max speed of train is 44 cm/s (0x2C mm/100ms). Whereas we can define a specific speed for each block.
+#define velocity 44               //Default max speed of train is 44 cm/s (0x2C mm/100ms). Whereas we can define a specific speed for each block.//
 
 #define B1_B2 1671
 #define B2_B3 1898
