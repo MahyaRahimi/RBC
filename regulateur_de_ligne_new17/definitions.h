@@ -1,7 +1,7 @@
 #ifndef DEFINITIONS_H
 #define DEFINITIONS_H
 
-/* Block identifiers: */
+/* Block identifiers: *////
 
 #define C1 0x051
 #define C2 0x052
