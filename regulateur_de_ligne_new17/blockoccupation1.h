@@ -19,7 +19,7 @@ extern int StartRegister;          //to switch between threads
 extern std::set<int64_t> Lines;    //set of Lines belong to this RBC
 extern int64_t BlockStatus[29];    //array of status of blocks
 extern string p;
-
+//
 
 class BlockOccupation
 {
