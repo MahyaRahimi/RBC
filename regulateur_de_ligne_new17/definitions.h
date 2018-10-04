@@ -1,6 +1,9 @@
 #ifndef DEFINITIONS_H
 #define DEFINITIONS_H
 //peyghame aval
+//dovom
+//sevom
+//chaharom
 /* Block identifiers: */
 
 #define C1 0x051
