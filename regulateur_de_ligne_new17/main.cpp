@@ -2,7 +2,7 @@
  * Data is cin from the user in int format, but is converted to unsigned char when saving analysing. otherwise we
  * cannot enter numbers like 120 and save all the digits (only first digit will be saved
  * In this version whoole mesage processing and demand answering is in one thread. */
-
+/* now I will add TCP */
 #include "definitions.h"
 #include "listener.h"
 #include "frame_analysis.h"
