@@ -19,6 +19,8 @@ public:
 private:
     int myint;                 //input data
     unsigned char mychar;               //input data transformed to char
+    void error_server(const char *msg);
+    void dostuff (int sock);
 };
 
 #endif // LISTENER_H
