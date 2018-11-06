@@ -28,7 +28,7 @@ int in_canbuffer_sign;                                           //a sign for tr
 std::condition_variable cv1;                                     //blocks the calling thread until notified to resume
 struct can_frame frameR;                                  //a CAN bus received frame
 int in_buffer_sign = 0;                                          //a sign for transferring the input to frame_analysis
-std::vector<unsigned char> myvector = {};                        //each element of myvector is a byte of data
+std::vector<unsigned char> myvector;                        //each element of myvector is a byte of data
 std::vector<std::vector<unsigned char>> myinputbuffer = {};      //vector of received messages
 int count = 0;                                                   //to count size of inputbuffer
 std::vector<unsigned char> frame_to_process;                     //will be sent to process thread; each element of it is a byte of data
@@ -59,7 +59,7 @@ int main()
     /*>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>*/
     /* create listener thread: */
     listener objlistener;
-    std::thread threadlistener(&listener::listen, objlistener);//creates thread threadlistener that calls listener()
+    std::thread threadlistener(&listener::listening, objlistener);//creates thread threadlistener that calls listener()
     /*<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<*/
 
     /*>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>*/

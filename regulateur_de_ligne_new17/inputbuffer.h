@@ -6,7 +6,7 @@
 #include <vector>
 
 
-extern std::mutex m;                     //for exclusive access to memory
+extern std::mutex m;                     //for exclusive access to memory, m is between listener and inputbuffer
 extern std::condition_variable cv;       //blocks the calling thread until notified to resume
 extern std::mutex m1;                    //for exclusive access to memory
 extern std::condition_variable cv1;      //blocks the calling thread until notified to resume
