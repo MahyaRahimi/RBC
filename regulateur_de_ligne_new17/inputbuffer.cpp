@@ -16,13 +16,26 @@ void inputbuffer::buffering(){
         {
             std::cout<<"here inputbuffer begins; in_buffer_sign: "<<in_buffer_sign<<std::endl;
             std::unique_lock<std::mutex> lk(m);
+            std::cout<<"next step inputbuffer will wait; in_buffer_sign: "<<in_buffer_sign<<std::endl;
+
             while(!in_buffer_sign) cv.wait(lk);
             /*--------------------------debug-----------------------------------------------------------------------------------------------------------------------------------------------------*/
             std::cout<<"here in_buffer_sign in inputbuffer has changed; in_buffer_sign: "<<in_buffer_sign<<std::endl;
             /*--------------------------debug-----------------------------------------------------------------------------------------------------------------------------------------------------*/
 
+            /*--------------------------debug-----------------------------------------------------------------------------------------------------------------------------------------------------*/
+            std::cout << "vector in inputbuffer is: "<<std::endl;
+            int k=0;
+            for (auto v : myvector)
+            {
+                    std::cout << k << ":" << std::hex << int(v) << "\n";
+                    k++;
+            }
+            /*--------------------------debug-----------------------------------------------------------------------------------------------------------------------------------------------------*/
+
             /* pushes the data in the inputbuffer: */
             myinputbuffer.push_back(myvector);
+
 
             /*--------------------------debug-----------------------------------------------------------------------------------------------------------------------------------------------------*/
             std::cout<<"now we show myinputbuffer: \n";
