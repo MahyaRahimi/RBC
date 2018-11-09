@@ -12,6 +12,9 @@
 #include <sys/types.h>
 #include <iostream>
 #include <iterator>
+#include <algorithm>
+#include <mutex>
+#include <condition_variable>
 /************************************************************************************************************************************************/
 /*                            This function listens to TCP, connects to trains,                                                                 */
 /*                            receives the frames and sends them to inputbuffer                                                                 */
@@ -108,14 +111,14 @@ int listener::listening()
             memset(sendBuff, '0', sizeof(sendBuff));
             strcpy(sendBuff, "Message from server");
             write(connfd, sendBuff, strlen(sendBuff));
-           // while (1) {
+            while (1) {
                 /*>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>*/
                 /* lock to take the input: */
                 {
-                    std::unique_lock<std::mutex> lk(m);
+                    std::lock_guard<std::mutex> lk(m10);
                     //n = read(connfd, &myvector[0] ,100);
                     n = read(connfd, buffer ,100);
-                    copy(&buffer[0], &buffer[100], back_inserter(myvector));
+                    std::copy(&buffer[0], &buffer[100], back_inserter(myvector));
                     if (n < 0) error_server("ERROR reading from socket");
                     in_buffer_sign = 1;         //if in_buffer_sign is equal to 1, after notification inputbuffer will be unlocked.
                     std::cout << "myvector filled. in_buffer_sign is "<<in_buffer_sign<<std::endl;
@@ -140,7 +143,8 @@ int listener::listening()
                 /*<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<*/
                 /* notify inputbuffer thread to finish waiting and start: */
                 std::cout<<"time to notify"<<std::endl;
-                cv.notify_all();
+                //lk.unlock();
+                cv10.notify_all();
 
                 /*--------------------------debug-----------------------------------------------------------------------------------------------------------------------------------------------------*/
                 std::cout<<"here in_buffer_sign in listener has changed; in_buffer_sign: "<<in_buffer_sign<<std::endl;
@@ -149,15 +153,18 @@ int listener::listening()
                 /*>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>*/
                 /*wait till inputbuffer thread saves myvector in myinputbuffer and change in_buffer_sign to 0: */
                 {
-                    std::unique_lock<std::mutex> lk(m);
-                    while(in_buffer_sign) cv.wait(lk);
+                    std::unique_lock<std::mutex> lk(m10);
+                    while(in_buffer_sign) cv10.wait(lk);
                 }
+                /*--------------------------debug-----------------------------------------------------------------------------------------------------------------------------------------------------*/
+                std::cout<<"back to the listner" <<std::endl;
+                /*--------------------------debug-----------------------------------------------------------------------------------------------------------------------------------------------------*/
                 /*<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<*/
 
                 /* clear myvector to be able to fill in with new data: */
                 myvector.clear();
 
-            //}
+            }
             /*<<<<<<<<<<<<<<<<<<<<<<<<<<<<<*/
             exit(0);
         }

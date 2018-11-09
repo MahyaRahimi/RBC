@@ -5,7 +5,7 @@
 #include <vector>
 #include <set>
 
-extern std::mutex m;                                            //for exclusive access to memory; between listener and frame_analysis
+extern std::mutex m;                                            //for exclusive access to memory; between inputbuffer and frame_analysis
 extern std::condition_variable cv;                              //blocks the calling thread until notified to resume
 extern std::mutex m1;                                           //for exclusive access to memory
 extern std::condition_variable cv1;                             //blocks the calling thread until notified to resume

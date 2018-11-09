@@ -6,8 +6,11 @@
 #include <vector>
 
 
-extern std::mutex m;                     //for exclusive access to memory, m is between listener and inputbuffer
+extern std::mutex m;                     //for exclusive access to memory, m is between listener and inputbuffer or frameanalysis
 extern std::condition_variable cv;       //blocks the calling thread until notified to resume
+extern std::mutex m10;                    //for exclusive access to memory, m is between listener and inputbuffer
+extern std::condition_variable cv10;      //blocks the calling thread until notified to resume
+
 extern std::mutex m1;                    //for exclusive access to memory
 extern std::condition_variable cv1;      //blocks the calling thread until notified to resume
 extern int in_buffer_sign;                     /*a sign for transferring the input to input buffer (it is not possible

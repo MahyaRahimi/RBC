@@ -23,6 +23,10 @@
 
 std::mutex m;                                                    //for exclusive access to memory
 std::condition_variable cv;                                      //blocks the calling thread until notified to resume
+std::mutex m10;                                           //for exclusive access to memory, m10 is between listener and inputbuffer
+std::condition_variable cv10;                             //blocks the calling thread until notified to resume
+
+
 std::mutex m1;                                                   //for exclusive access to memory; between listen_canbus and inputbuffer_can
 int in_canbuffer_sign;                                           //a sign for transferring the input from listen_canbus to inputbuffer_can
 std::condition_variable cv1;                                     //blocks the calling thread until notified to resume
