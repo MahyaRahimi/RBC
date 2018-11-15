@@ -2,7 +2,7 @@
  * Data is cin from the user in int format, but is converted to unsigned char when saving analysing. otherwise we
  * cannot enter numbers like 120 and save all the digits (only first digit will be saved
  * In this version whoole mesage processing and demand answering is in one thread. */
-/* now I will add TCP */
+
 #include "definitions.h"
 #include "listener.h"
 #include "frame_analysis.h"
@@ -23,16 +23,12 @@
 
 std::mutex m;                                                    //for exclusive access to memory
 std::condition_variable cv;                                      //blocks the calling thread until notified to resume
-std::mutex m10;                                           //for exclusive access to memory, m10 is between listener and inputbuffer
-std::condition_variable cv10;                             //blocks the calling thread until notified to resume
-
-
 std::mutex m1;                                                   //for exclusive access to memory; between listen_canbus and inputbuffer_can
 int in_canbuffer_sign;                                           //a sign for transferring the input from listen_canbus to inputbuffer_can
 std::condition_variable cv1;                                     //blocks the calling thread until notified to resume
 struct can_frame frameR;                                  //a CAN bus received frame
 int in_buffer_sign = 0;                                          //a sign for transferring the input to frame_analysis
-std::vector<unsigned char> myvector;                        //each element of myvector is a byte of data
+std::vector<unsigned char> myvector = {};                        //each element of myvector is a byte of data
 std::vector<std::vector<unsigned char>> myinputbuffer = {};      //vector of received messages
 int count = 0;                                                   //to count size of inputbuffer
 std::vector<unsigned char> frame_to_process;                     //will be sent to process thread; each element of it is a byte of data
@@ -49,7 +45,7 @@ int count_frame;                                                 //to count size
 std::vector<struct can_frame> caninputbuffer;                    //vector of received CAN frames
 std::mutex m2;                                                   //for exclusive access to memory; between blockoccupation and inputbuffer_can
 std::condition_variable cv2;                                     //blocks the calling thread until notified to resume
-std::string p="/home/ubuntu/QT_workspace/regulateur_de_ligne_new17/";    //path for in/output
+std::string p="/home/ubuntu/mahyac++/regulateur_de_ligne_new17(1)/regulateur_de_ligne_new17original/";    //path for in/output
 std::mutex m5;                                                   //for exclusive access to memory; between blockoccupation and frame_analysis
 std::condition_variable cv5;                                     //blocks the calling thread until notified to resume
 int StartAnalysis;                                               //to notify frame_analysis thread to start
