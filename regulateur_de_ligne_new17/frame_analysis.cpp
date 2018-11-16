@@ -153,6 +153,7 @@ void frame_analysis::analysis(){
             //I don't implement it yet, since RBC should send NID_LRBG to the train while it is not saved in RBC and I don't know even when this message will be used.
             break;
         default:
+            std::cout << "message ID is: " << int(message) << std::endl;
             break;
         }
 
