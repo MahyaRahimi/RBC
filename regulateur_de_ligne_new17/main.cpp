@@ -45,7 +45,7 @@ int count_frame;                                                 //to count size
 std::vector<struct can_frame> caninputbuffer;                    //vector of received CAN frames
 std::mutex m2;                                                   //for exclusive access to memory; between blockoccupation and inputbuffer_can
 std::condition_variable cv2;                                     //blocks the calling thread until notified to resume
-std::string p="/home/ubuntu/mahyac++/regulateur_de_ligne_new17(1)/regulateur_de_ligne_new17original/";    //path for in/output
+std::string p="/home/ubuntu/QT_workspace/gitkraken/RBC/regulateur_de_ligne_new17/";    //path for in/output
 std::mutex m5;                                                   //for exclusive access to memory; between blockoccupation and frame_analysis
 std::condition_variable cv5;                                     //blocks the calling thread until notified to resume
 int StartAnalysis;                                               //to notify frame_analysis thread to start
