@@ -49,7 +49,7 @@ void listen_CANbus::ListenCANBus()
     printf("%s at index %d\n", ifname, ifr.ifr_ifindex);
     if(bind(s, (struct sockaddr *)&addr, sizeof(addr)) < 0)
     {
-        perror("Error in socket bind!");
+        perror("Error in CAN socket bind!");
     }
     /*<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<*/
 
