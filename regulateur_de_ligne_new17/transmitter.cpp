@@ -7,7 +7,7 @@
 /*******************Since we don't have correct XBee transmitter funtion, we simulate frame transmition in another way : ************************/
 /************************************************************************************************************************************************/
 
-void transmitter::transmit()
+void transmitter::transmit(listener l)
 {
     while(1){
         /*>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>*/
@@ -31,6 +31,10 @@ void transmitter::transmit()
 
         /* to delete the retreived data from the myoutputbuffer: */
         myoutputbuffer.erase(myoutputbuffer.begin());
+
+        /* send messages to the client via TCP: */
+        strcpy(l.sendBuff, "Message from server in transmitter");
+        write(l.connfd, l.sendBuff, strlen(l.sendBuff));
 
         /*>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>*/
         /* print the message to be transmitted; instead of sending by XBEE artificially we print the message: */

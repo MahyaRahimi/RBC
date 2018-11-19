@@ -20,12 +20,7 @@
 
 int listener::listening()
 {
-    int listenfd = 0,connfd = 0;
 
-    struct sockaddr_in serv_addr;
-    char buffer[100];
-    char sendBuff[1025];
-    int n;
     listenfd = socket(AF_INET, SOCK_STREAM, 0);
     printf("socket retrieve success\n");
 
@@ -36,7 +31,8 @@ int listener::listening()
     serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
     serv_addr.sin_port = htons(4000);
 
-    bind(listenfd, (struct sockaddr*)&serv_addr,sizeof(serv_addr));
+    if(bind(listenfd, (struct sockaddr*)&serv_addr,sizeof(serv_addr)) < 0)
+        std::cout << "Error in TCP socket bind!"<< std::endl;
 
     if(listen(listenfd, 10) == -1){
         printf("Failed to listen\n");
@@ -46,10 +42,11 @@ int listener::listening()
     strcpy(sendBuff, "Message from server");
     write(connfd, sendBuff, strlen(sendBuff));
     /*--------------------------debug-----------------------------------------------------------------------------------------------------------------------------------------------------*/
+    memset(buffer, 0, sizeof(buffer));
     std::cout<<"1 do print::::\nbuffer is:";
     for (int i=0; i<100; i++)
         std::cout << int(buffer[i]) << " ";
-    std::cout << "1 myvector befor filling is: ";
+    std::cout << "1 myvector before filling is: ";
     int k=0;
     for (auto v : myvector)
     {
@@ -110,6 +107,7 @@ int listener::listening()
         myvector.clear();
     }
     close(connfd);
+    close(listenfd);
     return 0;
 
 }
