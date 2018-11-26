@@ -29,7 +29,7 @@ int listener::listening()
 
     serv_addr.sin_family = AF_INET;
     serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
-    serv_addr.sin_port = htons(4000);
+    serv_addr.sin_port = htons(3000);
 
     if(bind(listenfd, (struct sockaddr*)&serv_addr,sizeof(serv_addr)) < 0)
         std::cout << "Error in TCP socket bind!"<< std::endl;
@@ -40,6 +40,8 @@ int listener::listening()
     }
     connfd = accept(listenfd, (struct sockaddr*)NULL ,NULL); // accept awaiting request
     strcpy(sendBuff, "Message from server");
+    //std::copy(&buffer[0], &buffer[100], back_inserter(myvector));
+
     write(connfd, sendBuff, strlen(sendBuff));
     /*--------------------------debug-----------------------------------------------------------------------------------------------------------------------------------------------------*/
     memset(buffer, 0, sizeof(buffer));
@@ -101,6 +103,10 @@ int listener::listening()
         /*<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<*/
         /*--------------------------debug-----------------------------------------------------------------------------------------------------------------------------------------------------*/
         std::cout<<"back to the listner" <<std::endl;
+
+        /* send messages to the client via TCP: */
+        strcpy(sendBuff, "Message from server in listener/transmitter:");
+        write(connfd, sendBuff, strlen(sendBuff));
         /*--------------------------debug-----------------------------------------------------------------------------------------------------------------------------------------------------*/
 
         /* clear myvector to be able to fill in with new data: */

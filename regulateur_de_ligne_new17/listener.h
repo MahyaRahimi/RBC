@@ -31,7 +31,7 @@ private:
     int connfd = 0;
     struct sockaddr_in serv_addr;
     char buffer[100];
-    char sendBuff[1025];
+    char sendBuff[100];
     int n;
     int myint;                 //input data
     unsigned char mychar;               //input data transformed to char

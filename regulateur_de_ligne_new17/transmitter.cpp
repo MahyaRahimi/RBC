@@ -1,6 +1,14 @@
 #include "transmitter.h"
 #include <vector>
-
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <errno.h>
+#include <string.h>
+#include <sys/types.h>
 
 /************************************************************************************************************************************************/
 /********************************This function ideally receives the frames from the output buffer and transmits them to trains *************************/
@@ -33,7 +41,11 @@ void transmitter::transmit(listener l)
         myoutputbuffer.erase(myoutputbuffer.begin());
 
         /* send messages to the client via TCP: */
-        strcpy(l.sendBuff, "Message from server in transmitter");
+        strcpy(l.sendBuff, "Message from server in transmitter:");
+        write(l.connfd, l.sendBuff, strlen(l.sendBuff));
+
+        memset(l.sendBuff, 0, sizeof(l.sendBuff));
+        std::copy(data_to_transmit.begin(), data_to_transmit.end(), l.sendBuff);
         write(l.connfd, l.sendBuff, strlen(l.sendBuff));
 
         /*>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>*/
