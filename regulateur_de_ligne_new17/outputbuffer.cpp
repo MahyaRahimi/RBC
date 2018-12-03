@@ -12,7 +12,7 @@ void outputbuffer::buffering()
             std::unique_lock<std::mutex> lk3(m3);
             while(!out_buffer_sign) cv3.wait(lk3);
             /*--------------------------debug-----------------------------------------------------------------------------------------------------------------------------------------------------*/
-          std::cout<<"here out_buffer_sign in outputbuffer has changed; out_buffer_sign: "<<out_buffer_sign<<std::endl;
+          std::cout<<"Here out_buffer_sign in outputbuffer has changed; out_buffer_sign: "<<out_buffer_sign<<std::endl;
             /*--------------------------debug-----------------------------------------------------------------------------------------------------------------------------------------------------*/
 
         /* pushes the data to the outputbuffer: */

@@ -22,7 +22,8 @@ SOURCES += main.cpp \
     outputbuffer.cpp \
     listen_canbus.cpp \
     inputbuffer_can.cpp \
-    blockoccupation.cpp
+    blockoccupation.cpp \
+    tcp.cpp
 
 HEADERS += \
     listener.h \
@@ -33,4 +34,5 @@ HEADERS += \
     outputbuffer.h \
     listen_canbus.h \
     inputbuffer_can.h \
-    blockoccupation.h
+    blockoccupation.h \
+    tcp.h

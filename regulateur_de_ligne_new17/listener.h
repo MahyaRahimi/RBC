@@ -26,6 +26,7 @@ public:
     friend class transmitter;
     listener(){}
     int listening();
+    int writing(int socket, char Buff[], int size);
 private:
     int listenfd = 0;
     int connfd = 0;

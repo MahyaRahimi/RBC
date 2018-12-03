@@ -42,12 +42,12 @@ void transmitter::transmit(listener l)
 
         /* send messages to the client via TCP: */
         memset(l.sendBuff, 0, sizeof(l.sendBuff));
-        strcpy(l.sendBuff, "Message from server in transmitter:\n");
-        write(l.connfd, l.sendBuff, strlen(l.sendBuff));
+        strcpy(l.sendBuff, "Message from server in transmitter\n");
+        l.writing(l.connfd, l.sendBuff, strlen(l.sendBuff));
 
         memset(l.sendBuff, 0, sizeof(l.sendBuff));
         std::copy(data_to_transmit.begin(), data_to_transmit.end(), l.sendBuff);
-        write(l.connfd, l.sendBuff, strlen(l.sendBuff));
+        l.writing(l.connfd, l.sendBuff, strlen(l.sendBuff));
 
         /*>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>*/
         /* print the message to be transmitted; instead of sending by XBEE artificially we print the message: */

@@ -39,23 +39,23 @@ int listener::listening()
         return -1;
     }
     connfd = accept(listenfd, (struct sockaddr*)NULL ,NULL); // accept awaiting request
-    strcpy(sendBuff, "Message from server");
+    strcpy(sendBuff, "Message from server\n");
     //std::copy(&buffer[0], &buffer[100], back_inserter(myvector));
 
-    write(connfd, sendBuff, strlen(sendBuff));
+    writing(connfd, sendBuff, strlen(sendBuff));
     /*--------------------------debug-----------------------------------------------------------------------------------------------------------------------------------------------------*/
-    memset(buffer, 0, sizeof(buffer));
-    std::cout<<"1 do print::::\nbuffer is:";
+   /* memset(buffer, 0, sizeof(buffer));
+    std::cout<<"1. do print:\nbuffer is:";
     for (int i=0; i<100; i++)
         std::cout << int(buffer[i]) << " ";
-    std::cout << "1 myvector before filling is: ";
+    std::cout << "\nmyvector before filling is: ";
     int k=0;
     for (auto v : myvector)
     {
             std::cout << k << ":" << std::hex << int(v) << " ";
             k++;
     }
-    std::cout<<std::endl;
+    std::cout<<std::endl;*/
     /*--------------------------debug-----------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 
@@ -75,7 +75,9 @@ int listener::listening()
             }
             else{
                 printf("\nHere is the message: %s\n",buffer);
-                n = write(connfd,"I got your message",18);
+                memset(sendBuff, 0, sizeof(sendBuff));
+                strcpy(sendBuff, "I got your message\n");
+                n = writing(connfd, sendBuff, strlen(sendBuff));
                 if (n < 0) printf("ERROR writing to socket");
                 std::copy(&buffer[0], &buffer[100], back_inserter(myvector));
             }
@@ -106,8 +108,8 @@ int listener::listening()
 
         /* send messages to the client via TCP: */
         memset(sendBuff, 0, sizeof(sendBuff));
-        strcpy(sendBuff, "\nMessage from server in listener:\n");
-        write(connfd, sendBuff, strlen(sendBuff));
+        strcpy(sendBuff, "\nMessage from server in listener\n");
+        writing(connfd, sendBuff, strlen(sendBuff));
         /*--------------------------debug-----------------------------------------------------------------------------------------------------------------------------------------------------*/
 
         /* clear myvector to be able to fill in with new data: */
@@ -117,6 +119,12 @@ int listener::listening()
     close(listenfd);
     return 0;
 
+}
+
+int listener::writing(int socket, char  Buff[], int size)
+{
+    int n = write(socket, Buff, size);
+    return n;
 }
 
 
