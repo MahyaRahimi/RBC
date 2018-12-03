@@ -41,7 +41,8 @@ void transmitter::transmit(listener l)
         myoutputbuffer.erase(myoutputbuffer.begin());
 
         /* send messages to the client via TCP: */
-        strcpy(l.sendBuff, "Message from server in transmitter:");
+        memset(l.sendBuff, 0, sizeof(l.sendBuff));
+        strcpy(l.sendBuff, "Message from server in transmitter:\n");
         write(l.connfd, l.sendBuff, strlen(l.sendBuff));
 
         memset(l.sendBuff, 0, sizeof(l.sendBuff));

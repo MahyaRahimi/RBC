@@ -74,7 +74,7 @@ int listener::listening()
                 close(connfd);
             }
             else{
-                printf("Here is the message: %s\n",buffer);
+                printf("\nHere is the message: %s\n",buffer);
                 n = write(connfd,"I got your message",18);
                 if (n < 0) printf("ERROR writing to socket");
                 std::copy(&buffer[0], &buffer[100], back_inserter(myvector));
@@ -105,7 +105,8 @@ int listener::listening()
         std::cout<<"back to the listner" <<std::endl;
 
         /* send messages to the client via TCP: */
-        strcpy(sendBuff, "Message from server in listener/transmitter:");
+        memset(sendBuff, 0, sizeof(sendBuff));
+        strcpy(sendBuff, "\nMessage from server in listener:\n");
         write(connfd, sendBuff, strlen(sendBuff));
         /*--------------------------debug-----------------------------------------------------------------------------------------------------------------------------------------------------*/
 
