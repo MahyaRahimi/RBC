@@ -21,12 +21,15 @@
 #include <mutex>
 #include <condition_variable>*/
 
+std::mutex m_lis_tcp;                                            //for exclusive access to memory_between tcp and listener
+std::condition_variable cv_lis_tcp;                              //blocks the calling thread until notified to resume
+int listening_sign;                                              //a sign for notifying tcp that listener has restarted
 std::mutex m;                                                    //for exclusive access to memory
 std::condition_variable cv;                                      //blocks the calling thread until notified to resume
 std::mutex m1;                                                   //for exclusive access to memory; between listen_canbus and inputbuffer_can
 int in_canbuffer_sign;                                           //a sign for transferring the input from listen_canbus to inputbuffer_can
 std::condition_variable cv1;                                     //blocks the calling thread until notified to resume
-struct can_frame frameR;                                  //a CAN bus received frame
+struct can_frame frameR;                                         //a CAN bus received frame
 int in_buffer_sign = 0;                                          //a sign for transferring the input to frame_analysis
 std::vector<unsigned char> myvector = {};                        //each element of myvector is a byte of data
 std::vector<std::vector<unsigned char>> myinputbuffer = {};      //vector of received messages
@@ -49,7 +52,7 @@ std::string p="/home/ubuntu/QT_workspace/gitkraken/RBC/regulateur_de_ligne_new17
 std::mutex m5;                                                   //for exclusive access to memory; between blockoccupation and frame_analysis
 std::condition_variable cv5;                                     //blocks the calling thread until notified to resume
 int StartAnalysis;                                               //to notify frame_analysis thread to start
-std::set<int> Lines;                                          //set of Lines belong to this RBC
+std::set<int> Lines;                                             //set of Lines belong to this RBC
 int BlockStatus[29];                                             //array of status of blocks
 
 
@@ -71,7 +74,13 @@ int main()
     /*>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>*/
     /* create transmitter thread : */
     transmitter objtransmit;
-    std::thread threadtransmit(&transmitter::transmit, objtransmit, objlistener);//creates thread threadtransmit that calls transmit()
+    std::thread threadtransmit(&transmitter::transmit, objtransmit);//creates thread threadtransmit that calls transmit()
+    /*<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<*/
+
+    /*>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>*/
+    /* create tcp thread : */
+    TCP objTCP;
+    std::thread threadTCP(&TCP::connecting, objTCP);//creates thread threadTCP that calls connecting()
     /*<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<*/
 
     /*>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>*/
@@ -113,6 +122,7 @@ int main()
     threadoutputbuffer.join();
     threadanalysis.join();
     threadtransmit.join();
+    threadTCP.join();
     threadblockoccupation.join();
     /*<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<*/
 

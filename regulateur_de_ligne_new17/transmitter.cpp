@@ -15,7 +15,7 @@
 /*******************Since we don't have correct XBee transmitter funtion, we simulate frame transmition in another way : ************************/
 /************************************************************************************************************************************************/
 
-void transmitter::transmit(listener l)
+void transmitter::transmit()
 {
     while(1){
         /*>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>*/
@@ -41,13 +41,13 @@ void transmitter::transmit(listener l)
         myoutputbuffer.erase(myoutputbuffer.begin());
 
         /* send messages to the client via TCP: */
-        memset(l.sendBuff, 0, sizeof(l.sendBuff));
-        strcpy(l.sendBuff, "Message from server in transmitter\n");
-        l.writing(l.connfd, l.sendBuff, strlen(l.sendBuff));
+        memset(sendBuff, 0, sizeof(sendBuff));
+        strcpy(sendBuff, "Message from server in transmitter\n");
+        writing(connfd, sendBuff, strlen(sendBuff));
 
-        memset(l.sendBuff, 0, sizeof(l.sendBuff));
-        std::copy(data_to_transmit.begin(), data_to_transmit.end(), l.sendBuff);
-        l.writing(l.connfd, l.sendBuff, strlen(l.sendBuff));
+        memset(sendBuff, 0, sizeof(sendBuff));
+        std::copy(data_to_transmit.begin(), data_to_transmit.end(), sendBuff);
+        writing(connfd, sendBuff, strlen(sendBuff));
 
         /*>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>*/
         /* print the message to be transmitted; instead of sending by XBEE artificially we print the message: */
@@ -70,4 +70,9 @@ void transmitter::transmit(listener l)
 
 
 
+}
+int transmitter::writing(int socket, char  Buff[], int size)
+{
+    int n = write(socket, Buff, size);
+    return n;
 }
