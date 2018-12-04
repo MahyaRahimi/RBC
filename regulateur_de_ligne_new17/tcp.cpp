@@ -19,7 +19,7 @@ int TCP::connecting()
 
         serv_addr.sin_family = AF_INET;
         serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
-        serv_addr.sin_port = htons(3000);
+        serv_addr.sin_port = htons(4000);
 
         if(bind(listenfd, (struct sockaddr*)&serv_addr,sizeof(serv_addr)) < 0)
             std::cout << "Error in TCP socket bind!"<< std::endl;
