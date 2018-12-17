@@ -14,7 +14,7 @@ CC            = gcc
 CXX           = g++
 DEFINES       = -DQT_DEPRECATED_WARNINGS -DQT_CORE_LIB
 CFLAGS        = -pipe -g -Wall -W -D_REENTRANT -fPIC $(DEFINES)
-CXXFLAGS      = -pipe -g -std=gnu++0x -Wall -W -D_REENTRANT -fPIC $(DEFINES)
+CXXFLAGS      = -pipe -std=c++0x -pthread -g -std=gnu++0x -Wall -W -D_REENTRANT -fPIC $(DEFINES)
 INCPATH       = -I../regulateur_de_ligne_new17 -I. -I../../../../Qt5.6.3/5.6.3/gcc_64/include -I../../../../Qt5.6.3/5.6.3/gcc_64/include/QtCore -I. -I../../../../Qt5.6.3/5.6.3/gcc_64/mkspecs/linux-g++
 QMAKE         = /home/ubuntu/Qt5.6.3/5.6.3/gcc_64/bin/qmake
 DEL_FILE      = rm -f
@@ -36,7 +36,7 @@ DISTNAME      = regulateur_de_ligne_new171.0.0
 DISTDIR = /home/ubuntu/QT_workspace/gitkraken/RBC/buildRBC/.tmp/regulateur_de_ligne_new171.0.0
 LINK          = g++
 LFLAGS        = -Wl,-rpath,/home/ubuntu/Qt5.6.3/5.6.3/gcc_64/lib
-LIBS          = $(SUBLIBS) -L/home/ubuntu/Qt5.6.3/5.6.3/gcc_64/lib -lQt5Core -lpthread 
+LIBS          = $(SUBLIBS) -pthread -L/home/ubuntu/Qt5.6.3/5.6.3/gcc_64/lib -lQt5Core -lpthread 
 AR            = ar cqs
 RANLIB        = 
 SED           = sed
@@ -57,7 +57,7 @@ SOURCES       = ../regulateur_de_ligne_new17/main.cpp \
 		../regulateur_de_ligne_new17/listen_canbus.cpp \
 		../regulateur_de_ligne_new17/inputbuffer_can.cpp \
 		../regulateur_de_ligne_new17/blockoccupation.cpp \
-		../regulateur_de_ligne_new17/tcp.cpp 
+		../regulateur_de_ligne_new17/tcpnet.cpp 
 OBJECTS       = main.o \
 		listener.o \
 		frame_analysis.o \
@@ -67,7 +67,7 @@ OBJECTS       = main.o \
 		listen_canbus.o \
 		inputbuffer_can.o \
 		blockoccupation.o \
-		tcp.o
+		tcpnet.o
 DIST          = ../../../../Qt5.6.3/5.6.3/gcc_64/mkspecs/features/spec_pre.prf \
 		../../../../Qt5.6.3/5.6.3/gcc_64/mkspecs/common/unix.conf \
 		../../../../Qt5.6.3/5.6.3/gcc_64/mkspecs/common/linux.conf \
@@ -209,7 +209,7 @@ DIST          = ../../../../Qt5.6.3/5.6.3/gcc_64/mkspecs/features/spec_pre.prf \
 		../regulateur_de_ligne_new17/listen_canbus.h \
 		../regulateur_de_ligne_new17/inputbuffer_can.h \
 		../regulateur_de_ligne_new17/blockoccupation.h \
-		../regulateur_de_ligne_new17/tcp.h ../regulateur_de_ligne_new17/main.cpp \
+		../regulateur_de_ligne_new17/tcpnet.h ../regulateur_de_ligne_new17/main.cpp \
 		../regulateur_de_ligne_new17/listener.cpp \
 		../regulateur_de_ligne_new17/frame_analysis.cpp \
 		../regulateur_de_ligne_new17/transmitter.cpp \
@@ -218,7 +218,7 @@ DIST          = ../../../../Qt5.6.3/5.6.3/gcc_64/mkspecs/features/spec_pre.prf \
 		../regulateur_de_ligne_new17/listen_canbus.cpp \
 		../regulateur_de_ligne_new17/inputbuffer_can.cpp \
 		../regulateur_de_ligne_new17/blockoccupation.cpp \
-		../regulateur_de_ligne_new17/tcp.cpp
+		../regulateur_de_ligne_new17/tcpnet.cpp
 QMAKE_TARGET  = regulateur_de_ligne_new17
 DESTDIR       = 
 TARGET        = regulateur_de_ligne_new17
@@ -513,8 +513,8 @@ dist: distdir FORCE
 distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
-	$(COPY_FILE) --parents ../regulateur_de_ligne_new17/listener.h ../regulateur_de_ligne_new17/definitions.h ../regulateur_de_ligne_new17/frame_analysis.h ../regulateur_de_ligne_new17/transmitter.h ../regulateur_de_ligne_new17/inputbuffer.h ../regulateur_de_ligne_new17/outputbuffer.h ../regulateur_de_ligne_new17/listen_canbus.h ../regulateur_de_ligne_new17/inputbuffer_can.h ../regulateur_de_ligne_new17/blockoccupation.h ../regulateur_de_ligne_new17/tcp.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../regulateur_de_ligne_new17/main.cpp ../regulateur_de_ligne_new17/listener.cpp ../regulateur_de_ligne_new17/frame_analysis.cpp ../regulateur_de_ligne_new17/transmitter.cpp ../regulateur_de_ligne_new17/inputbuffer.cpp ../regulateur_de_ligne_new17/outputbuffer.cpp ../regulateur_de_ligne_new17/listen_canbus.cpp ../regulateur_de_ligne_new17/inputbuffer_can.cpp ../regulateur_de_ligne_new17/blockoccupation.cpp ../regulateur_de_ligne_new17/tcp.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../regulateur_de_ligne_new17/listener.h ../regulateur_de_ligne_new17/definitions.h ../regulateur_de_ligne_new17/frame_analysis.h ../regulateur_de_ligne_new17/transmitter.h ../regulateur_de_ligne_new17/inputbuffer.h ../regulateur_de_ligne_new17/outputbuffer.h ../regulateur_de_ligne_new17/listen_canbus.h ../regulateur_de_ligne_new17/inputbuffer_can.h ../regulateur_de_ligne_new17/blockoccupation.h ../regulateur_de_ligne_new17/tcpnet.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../regulateur_de_ligne_new17/main.cpp ../regulateur_de_ligne_new17/listener.cpp ../regulateur_de_ligne_new17/frame_analysis.cpp ../regulateur_de_ligne_new17/transmitter.cpp ../regulateur_de_ligne_new17/inputbuffer.cpp ../regulateur_de_ligne_new17/outputbuffer.cpp ../regulateur_de_ligne_new17/listen_canbus.cpp ../regulateur_de_ligne_new17/inputbuffer_can.cpp ../regulateur_de_ligne_new17/blockoccupation.cpp ../regulateur_de_ligne_new17/tcpnet.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -554,25 +554,23 @@ compiler_clean:
 ####### Compile
 
 main.o: ../regulateur_de_ligne_new17/main.cpp ../regulateur_de_ligne_new17/definitions.h \
-		../regulateur_de_ligne_new17/listener.h \
 		../regulateur_de_ligne_new17/frame_analysis.h \
 		../regulateur_de_ligne_new17/inputbuffer.h \
 		../regulateur_de_ligne_new17/inputbuffer_can.h \
 		../regulateur_de_ligne_new17/outputbuffer.h \
-		../regulateur_de_ligne_new17/transmitter.h \
 		../regulateur_de_ligne_new17/listen_canbus.h \
-		../regulateur_de_ligne_new17/blockoccupation.h
+		../regulateur_de_ligne_new17/blockoccupation.h \
+		../regulateur_de_ligne_new17/tcpnet.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../regulateur_de_ligne_new17/main.cpp
 
-listener.o: ../regulateur_de_ligne_new17/listener.cpp ../regulateur_de_ligne_new17/listener.h
+listener.o: ../regulateur_de_ligne_new17/listener.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o listener.o ../regulateur_de_ligne_new17/listener.cpp
 
 frame_analysis.o: ../regulateur_de_ligne_new17/frame_analysis.cpp ../regulateur_de_ligne_new17/frame_analysis.h \
 		../regulateur_de_ligne_new17/definitions.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o frame_analysis.o ../regulateur_de_ligne_new17/frame_analysis.cpp
 
-transmitter.o: ../regulateur_de_ligne_new17/transmitter.cpp ../regulateur_de_ligne_new17/transmitter.h \
-		../regulateur_de_ligne_new17/listener.h
+transmitter.o: ../regulateur_de_ligne_new17/transmitter.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o transmitter.o ../regulateur_de_ligne_new17/transmitter.cpp
 
 inputbuffer.o: ../regulateur_de_ligne_new17/inputbuffer.cpp ../regulateur_de_ligne_new17/inputbuffer.h
@@ -591,8 +589,8 @@ blockoccupation.o: ../regulateur_de_ligne_new17/blockoccupation.cpp ../regulateu
 		../regulateur_de_ligne_new17/definitions.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o blockoccupation.o ../regulateur_de_ligne_new17/blockoccupation.cpp
 
-tcp.o: ../regulateur_de_ligne_new17/tcp.cpp ../regulateur_de_ligne_new17/tcp.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o tcp.o ../regulateur_de_ligne_new17/tcp.cpp
+tcpnet.o: ../regulateur_de_ligne_new17/tcpnet.cpp ../regulateur_de_ligne_new17/tcpnet.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o tcpnet.o ../regulateur_de_ligne_new17/tcpnet.cpp
 
 ####### Install
 

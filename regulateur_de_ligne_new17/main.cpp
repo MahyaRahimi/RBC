@@ -2,20 +2,22 @@
  * Data is cin from the user in int format, but is converted to unsigned char when saving analysing. otherwise we
  * cannot enter numbers like 120 and save all the digits (only first digit will be saved
  * In this version whoole mesage processing and demand answering is in one thread. */
+#include<thread>
+#include <iostream>
+#include <set>
 
 #include "definitions.h"
-#include "listener.h"
+//#include "listener.h"
 #include "frame_analysis.h"
 #include "inputbuffer.h"
 #include "inputbuffer_can.h"
 #include "outputbuffer.h"
-#include "transmitter.h"
+//#include "transmitter.h"
 #include "listen_canbus.h"
 #include "blockoccupation.h"
+#include "tcpnet.h"
 
-#include<thread>
-#include <iostream>
-#include <set>
+
 /*#include <string.h>
 #include <tuple>
 #include <mutex>
@@ -60,10 +62,10 @@ int main()
 {
 
     /*>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>*/
-    /* create listener thread: */
-    listener objlistener;
-    std::thread threadlistener(&listener::listening, objlistener);//creates thread threadlistener that calls listener()
-    /*<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<*/
+//    /* create listener thread: */
+//    listener objlistener;
+//    std::thread threadlistener(&listener::listening, objlistener);//creates thread threadlistener that calls listener()
+//    /*<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<*/
 
     /*>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>*/
     /* create listen_canbus thread: */
@@ -72,16 +74,11 @@ int main()
     /*<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<*/
 
     /*>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>*/
-    /* create transmitter thread : */
-    transmitter objtransmit;
-    std::thread threadtransmit(&transmitter::transmit, objtransmit);//creates thread threadtransmit that calls transmit()
-    /*<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<*/
+//    /* create transmitter thread : */
+//    transmitter objtransmit;
+//    std::thread threadtransmit(&transmitter::transmit, objtransmit);//creates thread threadtransmit that calls transmit()
+//    /*<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<*/
 
-    /*>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>*/
-    /* create tcp thread : */
-    TCP objTCP;
-    std::thread threadTCP(&TCP::connecting, objTCP);//creates thread threadTCP that calls connecting()
-    /*<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<*/
 
     /*>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>*/
     /* create inputbuffer thread: */
@@ -112,17 +109,26 @@ int main()
     BlockOccupation objblockoccu;
     std::thread threadblockoccupation (&BlockOccupation::BlockOccupationFunction, objblockoccu);//creates thread threadblockoccupation that calls BlockOccupationFunction()
     /*<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<*/
+    /*>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>*/
+    /* create tcp thread : */
+    TCPNet objTCP;
+    objTCP.myconnect();//creates thread threadTCP that calls connecting()
+//    std::thread threadTCP;
+//    TCP myobj;
+//    threadTCP = std::thread (&TCP::connecting, myobj);//creates thread threadTCP that calls connecting()
+
+    /*<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<*/
 
     /*>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>*/
     /* thread join */
-    threadlistener.join();//pauses until threadlistener finishes
+    //threadlistener.join();//pauses until threadlistener finishes
     threadlisten_canbus.join();
     threadinputbuffer.join();
     threadinputbuffer_can.join();
     threadoutputbuffer.join();
     threadanalysis.join();
-    threadtransmit.join();
-    threadTCP.join();
+    //threadtransmit.join();
+    //myTCP.join();
     threadblockoccupation.join();
     /*<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<*/
 

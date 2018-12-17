@@ -2,6 +2,8 @@ QT -= gui
 
 CONFIG += c++11 console
 CONFIG -= app_bundle
+QMAKE_CXXFLAGS += -std=c++0x -pthread
+LIBS += -pthread
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked deprecated (the exact warnings
@@ -23,7 +25,7 @@ SOURCES += main.cpp \
     listen_canbus.cpp \
     inputbuffer_can.cpp \
     blockoccupation.cpp \
-    tcp.cpp
+    tcpnet.cpp
 
 HEADERS += \
     listener.h \
@@ -35,4 +37,4 @@ HEADERS += \
     listen_canbus.h \
     inputbuffer_can.h \
     blockoccupation.h \
-    tcp.h
+    tcpnet.h
