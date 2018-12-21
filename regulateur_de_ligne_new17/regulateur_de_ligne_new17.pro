@@ -17,9 +17,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += main.cpp \
-    listener.cpp \
     frame_analysis.cpp \
-    transmitter.cpp \
     inputbuffer.cpp \
     outputbuffer.cpp \
     listen_canbus.cpp \
@@ -28,10 +26,8 @@ SOURCES += main.cpp \
     tcpnet.cpp
 
 HEADERS += \
-    listener.h \
     definitions.h \
     frame_analysis.h \
-    transmitter.h \
     inputbuffer.h \
     outputbuffer.h \
     listen_canbus.h \

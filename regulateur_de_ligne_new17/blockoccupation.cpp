@@ -9,7 +9,7 @@
 
 
 /************************************************************************************************************************************************/
-/********************************This function saves status of blocks sent by the board "occupation des cantons": *******************************/
+/********************************This function saves status of blocks sent by the board "occupation des cantons" on the CAN bus: *******************************/
 /************************************************************************************************************************************************/
 void BlockOccupation::BlockOccupationFunction()
 {
@@ -17,48 +17,51 @@ void BlockOccupation::BlockOccupationFunction()
     std::ofstream outfile;                 //define output file
 
     {
-    std::unique_lock<std::mutex> lk5(m5);
+        std::unique_lock<std::mutex> lk5(m5); /*locks the bockoccupation thread and frame_analysis. frame analysis waits till list of lines related to this
+                                                RBC are initialized and then StartAnalysis becomes one and then frame analysis unlocks and continues process*/
 
-    /*>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>*/
-    /* Initialize all the blocks to Free */
-    for(int64_t i=0;i<29;i++)
-    {
-        BlockStatus[i]=FREE;
-    }
-    /*<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<*/
+        /*>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>*/
+        /* Initialize all the blocks to Free */
+        for(int64_t i=0;i<29;i++)
+        {
+            BlockStatus[i]=FREE;
+        }
+        /*<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<*/
 
-    /*>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>*/
-    /* Read list of lines related to this RBC */
-    ListOfLines.open(path);
-    /* Send error if coudn't find or open ListOfLines */
-    if(!ListOfLines)
-    {
-        std::cout<<"Error opening ListOfLines!"<<std::endl;
-    }
-    while(getline(ListOfLines,x))   //get a line from ListOfLines and save to x
-    {
-        l=stol(x,nullptr,16);       //convert x to hex and save to l
-        std::cout<<std::hex<<l<<std::endl;
-        Lines.insert(l);            //add l to the set Lines
-    }
-    ListOfLines.close();
-    /*<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<*/
+        /*>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>*/
+        /* Read list of lines related to this RBC */
+        ListOfLines.open(path);
+        /* Send error if couldn't find or open ListOfLines */
+        if(!ListOfLines)
+        {
+            std::cout<<"Error opening ListOfLines!"<<std::endl;
+        }
+        while(getline(ListOfLines,x))   //get a line from ListOfLines and save to x
+        {
+            l=stol(x,nullptr,16);       //convert x to hex and save to l
+            std::cout<<std::hex<<l<<std::endl;
+            Lines.insert(l);            //add l to the set Lines
+        }
+        ListOfLines.close();
+        /*<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<*/
 
 
-    /*--------------------------debug---------------------------------------------------------------------------------------------------------------*/
-    /* print elements of Line: */
-    std::cout<<"got these blocks:";
-    for(iter = Lines.begin(); iter!=Lines.end(); ++iter)
-    {
-        std::cout<<*iter<<" ";
-        std::cout.flush();
-    }
-    std::cout<<"\n";
-    /*--------------------------debug---------------------------------------------------------------------------------------------------------------*/
+        /*--------------------------debug---------------------------------------------------------------------------------------------------------------*/
+        /* print elements of Line: */
+        std::cout<<"got these blocks:";
+        for(iter = Lines.begin(); iter!=Lines.end(); ++iter)
+        {
+            std::cout<<*iter<<" ";
+            std::cout.flush();
+        }
+        std::cout<<"\n";
+        /*--------------------------debug---------------------------------------------------------------------------------------------------------------*/
 
-    StartAnalysis=1;
+        StartAnalysis=1;
+
     cv5.notify_all();    //to notify frame_analysis thread to unlock and start
-    while(StartAnalysis) cv5.wait(lk5);   //to make sure frame_analysis thread is started
+    while(StartAnalysis) cv5.wait(lk5);   /*to make sure frame_analysis thread is started, frame_analysis turns StartAnalysis to zero and notifies
+                                            the blockoccpupation to continue*/
     }
 
     /************************************************************************************************************************************************/
@@ -67,7 +70,7 @@ void BlockOccupation::BlockOccupationFunction()
 
 
     /*--------------------------debug---------------------------------------------------------------------------------------------------------------*/
-    outfile.open(path1,std::ofstream::out | std::ofstream::app);
+    outfile.open(path1,std::ofstream::out | std::ofstream::app); //open the file to write in it
     outfile<<"\n---*********************We are in thread block occupation"<<std::endl;
     outfile.close();
     /*--------------------------debug---------------------------------------------------------------------------------------------------------------*/
